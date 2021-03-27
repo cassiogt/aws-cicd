@@ -69,9 +69,19 @@ jobs:
         container-name: ecs-devops-sandbox
         image: ${{ steps.build-image.outputs.image }}
 
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+    steps:
+    - name: Test aplication
+      run: echo ${{ needs.build.steps.task-def.outputs.task-definition }}
+
   deploy-development:
     name: Deploy in develoment environment
-    needs: [build]
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: development
@@ -86,7 +96,7 @@ jobs:
 
   deploy-staging:
     name: Deploy in staging environment
-    needs: [deploy-development]
+    needs: deploy-development
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -94,14 +104,14 @@ jobs:
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ needs.build.steps.task-def.outputs.task-definition }}
+        task-definition: ${{ needs.deploy-development.steps.task-def.outputs.task-definition }}
         service: ecs-devops-sandbox-service
         cluster: ecs-devops-sandbox-cluster
         wait-for-service-stability: true
         
   deploy-production:
     name: Deploy in production environment
-    needs: [deploy-staging]
+    needs: deploy-staging
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -109,7 +119,7 @@ jobs:
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ needs.build.steps.task-def.outputs.task-definition }}
+        task-definition: ${{ needs.deploy-staging.steps.task-def.outputs.task-definition }}
         service: ecs-devops-sandbox-service
         cluster: ecs-devops-sandbox-cluster
         wait-for-service-stability: true
