@@ -69,6 +69,10 @@ jobs:
         container-name: ecs-devops-sandbox
         image: ${{ steps.build-image.outputs.image }}
 
+    - name: Test variables
+      id: test-var
+      run: echo ${{ steps.task-def.outputs.task-definition }} ${{ steps.task-def.outputs.task-definition }}  ${{ INPUT_TASK-DEFINITION }}
+
   test:
     name: Test
     needs: build
