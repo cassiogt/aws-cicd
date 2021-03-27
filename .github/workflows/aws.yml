@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    name: Deploy in develoment environment
+    name: Build and create image
     runs-on: ubuntu-latest
 
     steps:
