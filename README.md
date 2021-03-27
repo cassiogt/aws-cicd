@@ -1,3 +1,5 @@
 # aws-cicd
 
-https://codebuild.sa-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiRU8zL3U2cDgvYlMvajJQWjNTblNCY0luYVcrSnFlM2hBV2JvZG5QVzFiQXpDdTFuZlhSOWJZc1NHYnZFM0w3SnhuUVgwUXNNWitrbDJGTldBS2J6ZVk0PSIsIml2UGFyYW1ldGVyU3BlYyI6IlhaWmNHbU45UzdqYlc1TTgiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+[![Version](https://badge.fury.io/gh/tterb%2FHyde.svg)](https://badge.fury.io/gh/tterb%2FHyde)
+[![GitHub Release](https://img.shields.io/github/release/tterb/PlayMusic.svg?style=flat)]()  
