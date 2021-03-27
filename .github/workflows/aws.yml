@@ -1,13 +1,19 @@
+name: Deploy to Amazon ECS
+
 on:
   push:
     branches:
-      - master
-
-name: Deploy to Amazon ECS
+      - develop
+  workflow_dispatch: 
+    inputs:
+      version:
+        description: Bump Version
+        default: v1.0.0
+        required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: Deploy in develoment environment
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +41,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION_STAE }}
+        aws-region: sa-east-1
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -63,6 +69,43 @@ jobs:
         container-name: ecs-devops-sandbox
         image: ${{ steps.build-image.outputs.image }}
 
+  deploy-development:
+    name: Deploy in develoment environment
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+    steps:
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ecs-devops-sandbox-service
+        cluster: ecs-devops-sandbox-cluster
+        wait-for-service-stability: true
+
+  deploy-staging:
+    name: Deploy in staging environment
+    needs: [deploy-development]
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    steps:
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ecs-devops-sandbox-service
+        cluster: ecs-devops-sandbox-cluster
+        wait-for-service-stability: true
+        
+  deploy-production:
+    name: Deploy in production environment
+    needs: [deploy-staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
