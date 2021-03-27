@@ -71,7 +71,7 @@ jobs:
 
     - name: Test variables
       id: test-var
-      run: echo ${{ steps.task-def.outputs.task-definition }} ${{ steps.task-def.outputs.task-definition }}  ${{ INPUT_TASK-DEFINITION }}
+      run: echo ${{ steps.task-def.outputs.task-definition }} ${{ steps.task-def.outputs.task-definition }} 
 
   test:
     name: Test
