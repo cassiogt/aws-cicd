@@ -16,6 +16,9 @@ jobs:
     name: Build and create image
     runs-on: ubuntu-latest
 
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+
     steps:
     - name: Check commit status
       id: commit-status
@@ -60,9 +63,6 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-        
-    outputs:
-      image: ${{ steps.build-image.outputs.image }}
 
   test:
     name: Test
@@ -96,6 +96,12 @@ jobs:
         service: ecs-devops-sandbox-service
         cluster: ecs-devops-sandbox-cluster
         wait-for-service-stability: true
+
+
+
+
+
+
 
   deploy-staging:
     name: Deploy in staging environment
