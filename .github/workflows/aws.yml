@@ -67,7 +67,7 @@ jobs:
     - name: TESTE
       id: tese
       run: |
-        echo ${{ needs.build.outputs.image }}
+        echo ${{ outputs.image }}
         echo ${{ steps.build-image.outputs.image }}
 
   test:
