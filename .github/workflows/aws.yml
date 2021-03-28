@@ -64,6 +64,12 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+    - name: TESTE
+      id: tese
+      run: |
+        echo ${{ needs.build.outputs.image }}
+        echo ${{ steps.build-image.outputs.image }}
+
   test:
     name: Test
     needs: build
@@ -76,7 +82,8 @@ jobs:
 
   deploy-development:
     name: Deploy in develoment environment
-    needs: build
+    needs:
+    
     runs-on: ubuntu-latest
     environment:
       name: development
