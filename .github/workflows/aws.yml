@@ -63,6 +63,23 @@ jobs:
 
     - run: echo ${{ steps.build-image.outputs.image }} >> image.txt
 
+    - run: echo "deploy_image=$(cat image.txt)" >> $GITHUB_ENV
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: aws-cicd
+        image: process.env.release_id
+    
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: aws-cicd-service
+        cluster: aws-cicd-cluster
+        wait-for-service-stability: true
+
   test:
     name: Test
     needs: build
@@ -81,7 +98,7 @@ jobs:
     environment:
       name: development
     steps:
-    - run: echo "deploy_image=$(cat release.txt)" >> $GITHUB_ENV
+    - run: echo "deploy_image=$(cat image.txt)" >> $GITHUB_ENV
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
