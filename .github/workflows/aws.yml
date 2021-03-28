@@ -62,7 +62,7 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
     outputs:
-      image: ${{ steps.task-def.outputs.task-definition }}
+      image: ${{ steps.build-image.outputs.image }}
 
   test:
     name: Test
@@ -72,7 +72,7 @@ jobs:
       name: development
     steps:
     - name: Test aplication
-      run: echo ${{ needs.build.outputs.task-definition }}
+      run: echo ${{ needs.build.outputs.image }}
 
   deploy-development:
     name: Deploy in develoment environment
